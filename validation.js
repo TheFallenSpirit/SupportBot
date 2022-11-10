@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
-const { Message, Client, Attachment } = require("discord.js");
-const Jimp = require("jimp");
+const { Message, Attachment } = require("discord.js");
+const { read } = require("jimp");
 const { recognize } = require("tesseract.js");
 const responses = require("./responses");
 
@@ -30,7 +30,7 @@ module.exports = async (message) => {
 async function parseImage(image) {
     return new Promise(async (resolve, reject) => {
         const date = Date.now();
-        const img = await Jimp.read(image.url);
+        const img = await read(image.url);
         await img.contrast(-0.2).write(`${__dirname}/cache/img-${date}.png`);
         await recognize(`${__dirname}/cache/img-${date}.png`, 'eng').then(({ data: { text } }) => resolve(text)).catch(reject);
     });
